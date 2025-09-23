@@ -55,10 +55,9 @@ pipeline {
                 script {
                     try {
                         echo 'Deploying to Kubernetes...'
-                        // Update the image tag in deployment.yaml and deploy to local Minikube
+                        // Explicitly start Minikube with the correct path and driver
                         sh """
-                            # Ensure Minikube is running
-                            minikube status || minikube start
+                            /opt/homebrew/bin/minikube start --driver=docker
                             
                             # Update deployment image
                             sed -i '' 's|image: shreyasarjun/ai-agent-demo777:.*|image: shreyasarjun/ai-agent-demo777:${DOCKER_TAG}|' k8s/deployment.yaml
@@ -68,7 +67,7 @@ pipeline {
                             kubectl apply -f k8s/service.yaml
                             
                             # Wait for deployment to complete
-                            kubectl rollout status deployment/ai-agent-demo -n default --timeout=300s
+                            kubectl rollout status deployment/ai-agent-demo -n default --timeout=30s
                         """
                     } catch (Exception e) {
                         error "Failed to deploy to Kubernetes: ${e.message}"
