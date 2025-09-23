@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent { label 'linux' }
     
     environment {
         DOCKER_IMAGE = 'shreyasarjun/ai-agent-demo777'
