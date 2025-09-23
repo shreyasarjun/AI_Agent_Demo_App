@@ -67,7 +67,7 @@ pipeline {
                             kubectl apply -f k8s/service.yaml
                             
                             # Wait for deployment to complete
-                            kubectl rollout status deployment/ai-agent-demo -n default --timeout=30s
+                            kubectl rollout status deployment/ai-agent-demo -n default --timeout=300s
                         """
                     } catch (Exception e) {
                         error "Failed to deploy to Kubernetes: ${e.message}"
