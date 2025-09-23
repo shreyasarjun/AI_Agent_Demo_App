@@ -83,18 +83,16 @@ pipeline {
                         echo 'Running sanity tests...'
                         // Wait for service to be ready
                         sh """
-                            sleep 1  # Give some time for the service to be fully ready
+                            sleep 30  # Give some time for the service to be fully ready
                             
-                            # Get service URL
-                            SERVICE_IP=\$(kubectl get service ai-agent-cicd-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-                            SERVICE_PORT=\$(kubectl get service ai-agent-cicd-service -o jsonpath='{.spec.ports[0].port}')
+                            # Get service URL using Minikube
+                            SERVICE_URL=\$(minikube service ai-agent-cicd-service --url)
                             
                             # Basic health check
-                            curl -f http://\${SERVICE_IP}:\${SERVICE_PORT}/health || exit 1
+                            curl -f \"${SERVICE_URL}/health\" || exit 1
                             
                             # Additional basic sanity checks
-                            # Test application endpoints
-                            curl -f http://\${SERVICE_IP}:\${SERVICE_PORT}/ || exit 1
+                            curl -f \"${SERVICE_URL}/\" || exit 1
                         """
                         echo 'Sanity tests passed successfully'
                     } catch (Exception e) {
