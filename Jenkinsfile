@@ -81,19 +81,11 @@ pipeline {
                 script {
                     try {
                         echo 'Running sanity tests...'
-                        // Wait for service to be ready
-                        sh """
-                            sleep 30  # Give some time for the service to be fully ready
-                            
-                            # Get service URL using Minikube
-                            SERVICE_URL=\$(minikube service ai-agent-cicd-service --url)
-                            
-                            # Basic health check
-                            curl -f $SERVICE_URL/health || exit 1
-                            
-                            # Additional basic sanity checks
-                            curl -f $SERVICE_URL/ || exit 1
-                        """
+                        // Capture service URL from Minikube
+                        def serviceUrl = sh(script: "minikube service ai-agent-cicd-service --url", returnStdout: true).trim()
+                        // Basic health check
+                        sh "curl -f ${serviceUrl}/health || exit 1"
+                        sh "curl -f ${serviceUrl}/ || exit 1"
                         echo 'Sanity tests passed successfully'
                     } catch (Exception e) {
                         error "Sanity tests failed: ${e.message}"
