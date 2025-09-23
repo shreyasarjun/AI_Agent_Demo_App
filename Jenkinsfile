@@ -89,10 +89,10 @@ pipeline {
                             SERVICE_URL=\$(minikube service ai-agent-cicd-service --url)
                             
                             # Basic health check
-                            curl -f \"${SERVICE_URL}/health\" || exit 1
+                            curl -f $SERVICE_URL/health || exit 1
                             
                             # Additional basic sanity checks
-                            curl -f \"${SERVICE_URL}/\" || exit 1
+                            curl -f $SERVICE_URL/ || exit 1
                         """
                         echo 'Sanity tests passed successfully'
                     } catch (Exception e) {
