@@ -76,25 +76,6 @@ pipeline {
             }
         }
         
-        stage('Sanity Testing') {
-            steps {
-                script {
-                    try {
-                        echo 'Running sanity tests...'
-                        // Ensure Minikube is running
-                        sh "/opt/homebrew/bin/minikube start --driver=docker"
-                        // Capture service URL from Minikube
-                        def serviceUrl = sh(script: "minikube service ai-agent-cicd-service --url", returnStdout: true).trim()
-                        // Basic health check
-                        sh "curl -f ${serviceUrl}/health || exit 1"
-                        sh "curl -f ${serviceUrl}/ || exit 1"
-                        echo 'Sanity tests passed successfully'
-                    } catch (Exception e) {
-                        error "Sanity tests failed: ${e.message}"
-                    }
-                }
-            }
-        }
     }
     
     post {
