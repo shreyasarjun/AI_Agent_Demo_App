@@ -26,12 +26,27 @@ MANIFEST
 
 # Virtual environments
 venv/
-cicd_agent/
-ci cd_agnet/
 env/
 ENV/
+.env/
+.venv/
 env.bak/
 venv.bak/
+.virtualenv/
+virtualenv/
+*env*/
+cicd_agnet/
+cicd_agent/
+*_agnet/
+*_agent/
+
+# Python virtual environment binaries and files
+bin/
+include/
+lib/
+lib64/
+share/
+pyvenv.cfg
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
