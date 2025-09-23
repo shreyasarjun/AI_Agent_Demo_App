@@ -81,6 +81,8 @@ pipeline {
                 script {
                     try {
                         echo 'Running sanity tests...'
+                        // Ensure Minikube is running
+                        sh "/opt/homebrew/bin/minikube start --driver=docker"
                         // Capture service URL from Minikube
                         def serviceUrl = sh(script: "minikube service ai-agent-cicd-service --url", returnStdout: true).trim()
                         // Basic health check
