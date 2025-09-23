@@ -83,11 +83,11 @@ pipeline {
                         echo 'Running sanity tests...'
                         // Wait for service to be ready
                         sh """
-                            sleep 30  # Give some time for the service to be fully ready
+                            sleep 1  # Give some time for the service to be fully ready
                             
                             # Get service URL
-                            SERVICE_IP=\$(kubectl get service ai-agent-demo -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-                            SERVICE_PORT=\$(kubectl get service ai-agent-demo -o jsonpath='{.spec.ports[0].port}')
+                            SERVICE_IP=\$(kubectl get service ai-agent-cicd-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+                            SERVICE_PORT=\$(kubectl get service ai-agent-cicd-service -o jsonpath='{.spec.ports[0].port}')
                             
                             # Basic health check
                             curl -f http://\${SERVICE_IP}:\${SERVICE_PORT}/health || exit 1
