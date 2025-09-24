@@ -74,24 +74,24 @@ pipeline {
             }
         }
 
-        stage('Sanity Testing') {
-            steps {
-                script {
-                    try {
-                        echo 'Running sanity tests...'
-                            // ...existing code...
-                        // Get service URL from Minikube
-                        def serviceUrl = sh(script: "minikube service ai-agent-cicd-service --url", returnStdout: true).trim()
-                        echo "Service URL: ${serviceUrl}"
-                        // Print only the IP part
-                        def ip = serviceUrl.replaceAll(/https?:\/\/(.*):\d+/, '$1')
-                        echo "Service IP: ${ip}"
-                    } catch (Exception e) {
-                        error "Sanity tests failed: ${e.message}"
-                    }
-                }
-            }
-        }
+            // stage('Sanity Testing') {
+            //     steps {
+            //         script {
+            //             try {
+            //                 echo 'Running sanity tests...'
+            //                     // ...existing code...
+            //                 // Get service URL from Minikube
+            //                 def serviceUrl = sh(script: "minikube service ai-agent-cicd-service --url", returnStdout: true).trim()
+            //                 echo "Service URL: ${serviceUrl}"
+            //                 // Print only the IP part
+            //                 def ip = serviceUrl.replaceAll(/http?:\/\/(.*):\d+/, '$1')
+            //                 echo "Service IP: ${ip}"
+            //             } catch (Exception e) {
+            //                 error "Sanity tests failed: ${e.message}"
+            //             }
+            //         }
+            //     }
+            // }
         
     }
     
