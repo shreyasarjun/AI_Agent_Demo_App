@@ -81,7 +81,7 @@ pipeline {
                         echo 'Running sanity tests...'
                             // ...existing code...
                         // Get service URL from Minikube
-                        def serviceUrl = sh(script: "/opt/homebrew/bin/minikube service ai-agent-cicd-service --url", returnStdout: true).trim()
+                        def serviceUrl = sh(script: "minikube service ai-agent-cicd-service --url", returnStdout: true).trim()
                         echo "Service URL: ${serviceUrl}"
                         // Print only the IP part
                         def ip = serviceUrl.replaceAll(/https?:\/\/(.*):\d+/, '$1')
