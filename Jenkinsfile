@@ -7,6 +7,7 @@ pipeline {
         DOCKER_CREDENTIALS_ID = 'docker-hub-credentials'
         GIT_REPO = 'https://github.com/shreyasarjun/AI_Agent_Demo_App.git'
         GIT_BRANCH = 'main'
+        PATH = "/opt/homebrew/bin:$PATH"
     }
     
     stages {
@@ -55,22 +56,38 @@ pipeline {
                 script {
                     try {
                         echo 'Deploying to Kubernetes...'
-                        // Explicitly start Minikube with the correct path and driver
-                        sh """
-                            /opt/homebrew/bin/minikube start --driver=docker
+                            // Update deployment image
+                            sh """
+                                sed -i '' 's|image: shreyasarjun/ai-agent-demo777:.*|image: shreyasarjun/ai-agent-demo777:${DOCKER_TAG}|' k8s/deployment.yaml
                             
-                            # Update deployment image
-                            sed -i '' 's|image: shreyasarjun/ai-agent-demo777:.*|image: shreyasarjun/ai-agent-demo777:${DOCKER_TAG}|' k8s/deployment.yaml
+                                # Apply Kubernetes configurations
+                                kubectl apply -f k8s/deployment.yaml
+                                kubectl apply -f k8s/service.yaml
                             
-                            # Apply Kubernetes configurations
-                            kubectl apply -f k8s/deployment.yaml
-                            kubectl apply -f k8s/service.yaml
-                            
-                            # Wait for deployment to complete
-                            kubectl rollout status deployment/ai-agent-demo -n default --timeout=300s
-                        """
+                                # Wait for deployment to complete
+                                kubectl rollout status deployment/ai-agent-demo -n default --timeout=300s
+                            """
                     } catch (Exception e) {
                         error "Failed to deploy to Kubernetes: ${e.message}"
+                    }
+                }
+            }
+        }
+
+        stage('Sanity Testing') {
+            steps {
+                script {
+                    try {
+                        echo 'Running sanity tests...'
+                            // ...existing code...
+                        // Get service URL from Minikube
+                        def serviceUrl = sh(script: "/opt/homebrew/bin/minikube service ai-agent-cicd-service --url", returnStdout: true).trim()
+                        echo "Service URL: ${serviceUrl}"
+                        // Print only the IP part
+                        def ip = serviceUrl.replaceAll(/https?:\/\/(.*):\d+/, '$1')
+                        echo "Service IP: ${ip}"
+                    } catch (Exception e) {
+                        error "Sanity tests failed: ${e.message}"
                     }
                 }
             }
